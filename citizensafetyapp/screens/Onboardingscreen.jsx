@@ -19,7 +19,7 @@ export default function OnboardingScreen() {
 
   const handleDone =async () => {
 
-    navigation.navigate("Home");
+    navigation.navigate("Homeload");
     setItem("onboarded", "1");
   };
 
@@ -41,7 +41,7 @@ export default function OnboardingScreen() {
         containerStyles={{ paddingHorizontal: 15 }}
         pages={[
           {
-            backgroundColor: "#a7f3d0",
+            backgroundColor: "#111827",
             image: (
               <View style={styles.lottie}>
                 <Lottie
@@ -59,7 +59,7 @@ export default function OnboardingScreen() {
             subtitle: "Subscribe this channel to boost your productivity level",
           },
           {
-            backgroundColor: "#fef3c7",
+            backgroundColor: "#111827",
             image: (
               <View style={styles.lottie}>
                 <Lottie
@@ -77,7 +77,7 @@ export default function OnboardingScreen() {
             subtitle: "Get your work done seamlessly without interruption",
           },
           {
-            backgroundColor: "#a78bfa",
+            backgroundColor: "#111827",
             image: (
               <View style={styles.lottie}>
                 <Lottie
@@ -104,11 +104,11 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "white",
   },
   lottie: {
     width: width * 0.9,
     height: width,
+    margin:"auto"
   },
   doneButton: {
     padding: 20,

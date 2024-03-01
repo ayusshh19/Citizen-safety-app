@@ -1,13 +1,14 @@
 import React, { useRef, useEffect } from 'react';
 import { Button, StyleSheet, View } from 'react-native';
 import LottieView from 'lottie-react-native';
+import colors from '../../redux/constants/colors';
 function Homeloading({navigation}) {
     const animation = useRef(null);
     setTimeout(()=>{
       navigation.replace('Onboarding')
   },2500  )
   return (
-    <View className="flex-1 items-center justify-center bg-[#F9F07A]">
+    <View style={styles.container}>
       <LottieView
         autoPlay
         ref={animation}
@@ -21,5 +22,14 @@ function Homeloading({navigation}) {
     </View>
   );
 }
+
+const styles=StyleSheet.create({
+  container:{
+    flex:1,
+    justifyContent:"center",
+    alignItems:"center",
+    backgroundColor:colors.screenbg
+  }
+})
 
 export default Homeloading;

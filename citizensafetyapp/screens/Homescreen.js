@@ -18,10 +18,10 @@ import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
-  { route: 'Sos', label: 'Like', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
-  { route: 'Info', label: 'Search', type: Icons.MaterialCommunityIcons, activeIcon: 'timeline-plus', inActiveIcon: 'timeline-plus-outline', component: Infopage },
-  { route: 'Blog', label: 'Account', type: Icons.FontAwesome, activeIcon: 'user-circle', inActiveIcon: 'user-circle-o', component: Blog },
-  { route: 'Others', label: 'Account', type: Icons.FontAwesome, activeIcon: 'user-circle', inActiveIcon: 'user-circle-o', component: Others },
+  { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
+  { route: 'Info', label: 'Info', type: Icons.MaterialCommunityIcons, activeIcon: 'timeline-plus', inActiveIcon: 'timeline-plus-outline', component: Infopage },
+  { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'user-circle', inActiveIcon: 'user-circle-o', component: Blog },
+  { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'user-circle', inActiveIcon: 'user-circle-o', component: Others },
 ];
 
 
@@ -50,7 +50,7 @@ const TabButton = (props) => {
       >
         <Icon type={item.type}
           name={focused ? item.activeIcon : item.inActiveIcon}
-          color={focused ? Colors.primary : Colors.gradientForm} />
+          color={focused ? Colors.buttonbg : Colors.screenbg} />
       </Animatable.View>
       <Animatable.Text
       style={[styles.text, Colors.black ]}>
@@ -73,7 +73,6 @@ export default function HomeScreen() {
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           PermissionsAndroid.PERMISSIONS.RECEIVE_SMS]
         );
-      console.log(permission)
       setReceiveSmsPermission(permission);
     } catch (err) {
       console.log(err);
@@ -174,7 +173,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     textAlign: 'center',
     marginTop:5,
-    color: Colors.primary,
+    color: Colors.buttonbg,
     fontWeight: '500'
   }
 })

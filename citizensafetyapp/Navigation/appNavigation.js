@@ -39,7 +39,7 @@ export default function AppNavigation() {
         <Stack.Navigator initialRouteName='splash'>
           <Stack.Screen name="splash" options={{ headerShown: false }} component={Homeloading} />
           <Stack.Screen name="Onboarding" options={{ headerShown: false }} component={OnboardingScreen} />
-          <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
+          <Stack.Screen name="Homeload" options={{ headerShown: false }} component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )
@@ -49,7 +49,7 @@ export default function AppNavigation() {
         <Stack.Navigator  initialRouteName='splash'>
           <Stack.Screen name="splash" options={{ headerShown: false }} component={Homeloading} />
           <Stack.Screen name="Onboarding" options={{ headerShown: false }} component={OnboardingScreen} />
-          <Stack.Screen name="Home" options={{ headerShown: false }} component={HomeScreen} />
+          <Stack.Screen name="Homeload" options={{ headerShown: false }} component={HomeScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     )

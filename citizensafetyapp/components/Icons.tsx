@@ -40,7 +40,6 @@ export interface IconProps {
 const Icon = ({ type, name, color, size = 24, style }: IconProps) => {
     const fontSize = 24;
     const Tag = type;
-    console.log(Tag)
     return (
         <>
             {type && name && (
