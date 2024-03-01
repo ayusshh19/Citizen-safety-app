@@ -20,7 +20,7 @@ const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
   { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
   { route: 'Info', label: 'Info', type: Icons.FontAwesome, activeIcon: 'info-circle', inActiveIcon: 'info-circle', component: Infopage },
-  { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'map-marker', inActiveIcon: 'map-marker', component: Blog },
+  { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'file-text', inActiveIcon: 'file-text', component: Blog },
   { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'map-o', inActiveIcon: 'map-marker', component: Others },
 ];
 
