@@ -11,6 +11,7 @@ import SimpleLineIcons from 'react-native-vector-icons/SimpleLineIcons';
 import Octicons from 'react-native-vector-icons/Octicons';
 import Foundation from 'react-native-vector-icons/Foundation';
 import EvilIcons from 'react-native-vector-icons/EvilIcons';
+import InfoIcon from 'react-native-vector-icons/Octicons'
 import { StyleProp, ViewStyle } from 'react-native';
 
 export const Icons = {
@@ -26,7 +27,9 @@ export const Icons = {
     Octicons,
     Foundation,
     EvilIcons,
+    InfoIcon
 }
+
 
 
 export interface IconProps {

@@ -5,7 +5,7 @@ import colors from '../redux/constants/colors'
 const Blog = () => {
   return (
     <View style={styles.container}>
-      <Text>Blog</Text>
+      <Text style={styles.text}>Blog</Text>
     </View>
   )
 }
