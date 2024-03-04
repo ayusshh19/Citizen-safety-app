@@ -16,6 +16,7 @@ import Colors from '../redux/constants/colors';
 import Blog from './Blog';
 import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
+
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
   { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
@@ -53,9 +54,9 @@ const TabButton = (props) => {
           color={focused ? Colors.buttonbg : Colors.screenbg} />
       </Animatable.View>
       <Animatable.Text
-      style={[styles.text, Colors.black ]}>
-          {item.label}
-        </Animatable.Text>
+        style={[styles.text, Colors.black]}>
+        {item.label}
+      </Animatable.Text>
     </TouchableOpacity>
   )
 }
@@ -71,7 +72,8 @@ export default function HomeScreen() {
           [PermissionsAndroid.PERMISSIONS.CAMERA,
           PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS]
+          PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
+          PermissionsAndroid.PERMISSIONS.READ_CALL_LOG]
         );
       setReceiveSmsPermission(permission);
     } catch (err) {
@@ -84,7 +86,7 @@ export default function HomeScreen() {
   }, []);
 
   useEffect(() => {
-
+   
     SmsListener.addListener(message => {
       console.info(message)
       Alert.alert(message.body)
@@ -172,7 +174,7 @@ const styles = StyleSheet.create({
   text: {
     fontSize: 12,
     textAlign: 'center',
-    marginTop:5,
+    marginTop: 5,
     color: Colors.buttonbg,
     fontWeight: '500'
   }

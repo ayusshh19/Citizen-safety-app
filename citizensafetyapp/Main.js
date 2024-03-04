@@ -1,9 +1,11 @@
 import React from 'react'
 import AppNavigation from './Navigation/appNavigation'
-
+import { PaperProvider } from 'react-native-paper';
 function Main() {
   return (
-    <AppNavigation />
+    <PaperProvider>
+      <AppNavigation />
+    </PaperProvider>
   )
 }
 
