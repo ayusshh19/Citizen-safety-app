@@ -106,11 +106,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   lottie: {
-    width: width * 0.9,
+    width: width * 0.7,
     height: width,
-    margin:"auto"
+    margin:"auto",
   },
   doneButton: {
     padding: 20,
+    color:"white"
   },
 });

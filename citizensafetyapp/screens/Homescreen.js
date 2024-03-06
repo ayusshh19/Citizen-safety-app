@@ -1,12 +1,12 @@
-import { View, Text, StyleSheet, Dimensions, TouchableOpacity, PermissionsAndroid, DeviceEventEmitter, Alert, NativeEventEmitter } from 'react-native'
+import { View, Text, StyleSheet, Dimensions, TouchableOpacity, PermissionsAndroid, DeviceEventEmitter, Alert, NativeEventEmitter, NativeModules } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Lottie from 'lottie-react-native';
+// import Lottie from 'lottie-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { removeItem } from '../utils/asyncStorage';
 const { width, height } = Dimensions.get('window');
 import SmsListener from 'react-native-android-sms-listener'
-import Contacts from 'react-native-contacts';
+// import Contacts from 'react-native-contacts';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Mainpage from './Mainpage';
 import Sos from './Sos';
@@ -16,7 +16,10 @@ import Colors from '../redux/constants/colors';
 import Blog from './Blog';
 import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
-
+import { Smsclassifier, query } from './api/functions';
+// import CallDetectorManager from "react-native-call-detection";
+// import RNCallKeep from 'react-native-callkeep';
+// import Fraudnumbers from './Functionality/Fraudnumbers';
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
   { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
@@ -24,7 +27,6 @@ const TabArr = [
   { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'file-text', inActiveIcon: 'file-text', component: Blog },
   { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'map-o', inActiveIcon: 'map-marker', component: Others },
 ];
-
 
 const Tab = createBottomTabNavigator();
 
@@ -61,9 +63,6 @@ const TabButton = (props) => {
   )
 }
 export default function HomeScreen() {
-  const navigation = useNavigation();
-
-  const [receiveSmsPermission, setReceiveSmsPermission] = useState('');
 
   const requestSmsPermission = async () => {
     try {
@@ -73,66 +72,71 @@ export default function HomeScreen() {
           PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
           PermissionsAndroid.PERMISSIONS.RECEIVE_SMS,
-          PermissionsAndroid.PERMISSIONS.READ_CALL_LOG]
+          PermissionsAndroid.PERMISSIONS.READ_CALL_LOG,]
+
         );
-      setReceiveSmsPermission(permission);
+      // setReceiveSmsPermission(permission);
     } catch (err) {
       console.log(err);
     }
   };
-
+  function extractUrls(inputString) {
+    const urlPattern = /\b(?:https?|ftp):\/\/\S+\b/g;
+    return inputString.match(urlPattern) || [];
+  }
   useEffect(() => {
     requestSmsPermission();
-  }, []);
-
-  useEffect(() => {
-   
+    // const callDetector = new CallDetectorManager(
+    //   (event, number) => {
+    //     console.log(event, number)
+    //     if (event === "Incoming") {
+    //       console.log(number)
+    //       if (Fraudnumbers.includes(parseInt(number))) {
+    //         Alert.alert("Fraud Number")
+    //         RNCallKeep.displayIncomingCall("af7c1fe6-d669-414e-b066-e9733f0de7a8", number, localizedCallerName = '', handleType = 'number', hasVideo = false, options = null);
+    //         RNCallKeep.rejectCall("af7c1fe6-d669-414e-b066-e9733f0de7a8")
+    //       }
+    //     }
+    //   },
+    //   true,
+    //   () => { },
+    //   {
+    //     title: "Phone State Permission",
+    //     message:
+    //       "This app needs access to your phone state in order to react and/or to adapt to incoming calls."
+    //   }
+    // );
     SmsListener.addListener(message => {
-      console.info(message)
-      Alert.alert(message.body)
-    })
-    PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.READ_CONTACTS, {
-      title: 'Contacts',
-      message: 'This app would like to view your contacts.',
-      buttonPositive: 'Please accept bare mortal',
-    })
-      .then((res) => {
-        console.log('Permission: ', res);
-        Contacts.getAll()
-          .then((contacts) => {
-            // work with contacts
-            const data = contacts.map((contact) => {
-              return contact.phoneNumbers
-            })
-            // console.log(data)
-          })
-          .catch((e) => {
-            console.log(e);
+      const urls = extractUrls(message.body)
+      let fraudurlscore, validurlscore, fraudsmsscore, validsmsscore;
+      Smsclassifier({ "inputs": message.body })
+      if (urls.length > 0) {
+        query({ "inputs": urls[0] }).then((response) => {
+          console.log(response)
+          validurlscore = response[0][0].score
+          fraudurlscore = response[0][1].score
+          Smsclassifier({ "inputs": message.body }).then((response) => {
+            console.log(response)
+            fraudsmsscore = response[0][0].score
+            validsmsscore = response[0][1].score
+            if ((validurlscore < fraudurlscore && fraudurlscore > 0.4) || fraudsmsscore > validsmsscore) {
+              Alert.alert("Its a fruad sms stay alert from URLS!")
+            }
           });
-      })
-      .catch((error) => {
-        console.error('Permission error: ', error);
-      });
-    if (receiveSmsPermission === PermissionsAndroid.RESULTS.GRANTED) {
+        });
 
-      let subscriber = DeviceEventEmitter.addListener(
-        'NOTIFY',
-        message => {
-          console.log(message)
-          const { messageBody, senderPhoneNumber } = JSON.parse(message);
-
-          Alert.alert(
-            'SMS received',
-            `Message Body: ${messageBody} & sender number: ${senderPhoneNumber}`,
-          );
-        },
-      );
-      console.log(subscriber)
-      return () => {
-        subscriber.remove();
-      };
-    }
-  }, [receiveSmsPermission]);
+      }
+      else {
+        Smsclassifier({ "inputs": message.body }).then((response) => {
+          fraudsmsscore = response[0][1].score
+          validsmsscore = response[0][0].score
+        });
+        if (fraudsmsscore > validsmsscore) {
+          Alert.alert("Its a fraud sms !")
+        }
+      }
+    })
+  }, []);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>

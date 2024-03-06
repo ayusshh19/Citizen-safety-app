@@ -56,7 +56,7 @@ const styles = StyleSheet.create({
   },
   uppertextsyle:{
     color:colors.white,
-    fontSize:25
+    fontSize:20
   },
   upperimagestyle:{
     width:300,
@@ -69,6 +69,7 @@ const styles = StyleSheet.create({
     flexDirection:"row",
     flexWrap:"wrap",
     justifyContent:"space-evenly",
+    color:"white"
   }
 });
 export default Mainpage;

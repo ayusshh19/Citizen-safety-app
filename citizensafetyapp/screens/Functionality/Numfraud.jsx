@@ -1,33 +1,62 @@
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
+import {View, Text, StyleSheet, ScrollView, Alert} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import colors from '../../redux/constants/colors';
 import CallLogs from 'react-native-call-log';
 import {ListItem, Avatar, Button, Icon, Input} from '@rneui/themed';
+import RNFS from 'react-native-fs';
+import { Overlay } from '@rneui/themed';
+import numberlist from './Fraudnumbers'
 export default function Numfraud() {
   const [loadcall, setloadcall] = useState([]);
+  const [numberinput, setnumberinput] = useState('');
+  const [isfraud,setisfraud]=useState(false)
+  const handletestinput = () => {
+    if(numberlist.includes(parseInt(numberinput))){
+      setisfraud(true)
+    }else{
+      Alert.alert("Its a Fraud number but we have already blocked it for you")
+    }
+  };
   useEffect(() => {
     CallLogs.load(20).then(c => setloadcall(c));
   }, []);
   return (
     <View style={styles.component}>
+      <Overlay isVisible={isfraud} onBackdropPress={()=>setisfraud(!isfraud)}>
+
+      </Overlay>
       <View style={styles.inputcomponent}>
-        <Input placeholder="Enter your number to test" keyboardType="number-pad" style={{color:"white"}} containerStyle={{
-                width: 300,
-              }}/>
+        <Input
+          placeholder="Enter your number to test"
+          keyboardType="number-pad"
+          style={{color: 'white'}}
+          containerStyle={{
+            width: 300,
+          }}
+          onChangeText={e => setnumberinput(e)}
+          value={numberinput}
+        />
         <Button
-              title="Test Number"
-              buttonStyle={{
-                backgroundColor: colors.buttonbg,
-                borderRadius: 3,
-              }}
-              containerStyle={{
-                width: 200,
-                marginHorizontal: 70,
-                marginVertical: 10,
-              }}
-            />
+          title="Test Number"
+          buttonStyle={{
+            backgroundColor: colors.buttonbg,
+            borderRadius: 3,
+          }}
+          containerStyle={{
+            width: 200,
+            marginHorizontal: 70,
+            marginVertical: 10,
+          }}
+          onPress={handletestinput}
+        />
       </View>
-      <Text style={{fontSize:30,marginBottom:20,fontWeight:"600",textAlign:"left"}}>
+      <Text
+        style={{
+          fontSize: 30,
+          marginBottom: 20,
+          fontWeight: '600',
+          textAlign: 'left',
+        }}>
         Call Logs
       </Text>
       <ScrollView>
@@ -103,14 +132,14 @@ const styles = StyleSheet.create({
   textstyles: {
     fontSize: 20,
   },
-  inputcomponent:{
+  inputcomponent: {
     width: '100%',
-    margin:20,
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center"
+    margin: 20,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  inputtest:{
-    width:"80%"
-  }
+  inputtest: {
+    width: '80%',
+  },
 });
