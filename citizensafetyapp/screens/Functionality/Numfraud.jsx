@@ -4,17 +4,17 @@ import colors from '../../redux/constants/colors';
 import CallLogs from 'react-native-call-log';
 import {ListItem, Avatar, Button, Icon, Input} from '@rneui/themed';
 import RNFS from 'react-native-fs';
-import { Overlay } from '@rneui/themed';
-import numberlist from './Fraudnumbers'
+import {Overlay} from '@rneui/themed';
+import numberlist from './Fraudnumbers';
 export default function Numfraud() {
   const [loadcall, setloadcall] = useState([]);
   const [numberinput, setnumberinput] = useState('');
-  const [isfraud,setisfraud]=useState(false)
+  const [isfraud, setisfraud] = useState(false);
   const handletestinput = () => {
-    if(numberlist.includes(parseInt(numberinput))){
-      setisfraud(true)
-    }else{
-      Alert.alert("Its a Fraud number but we have already blocked it for you")
+    if (numberlist.includes(parseInt(numberinput))) {
+      Alert.alert('Its a Fraud number but we have already blocked it for you');
+    } else {
+      setisfraud(true);
     }
   };
   useEffect(() => {
@@ -22,8 +22,41 @@ export default function Numfraud() {
   }, []);
   return (
     <View style={styles.component}>
-      <Overlay isVisible={isfraud} onBackdropPress={()=>setisfraud(!isfraud)}>
-
+      <Overlay isVisible={isfraud} onBackdropPress={() => setisfraud(!isfraud)}>
+        <View style={styles.Overlaycontainer}>
+          <Text>
+            Its not an fraud number but if you find it you can add to us we can
+            verify for you and if we get multiple reports we could block for you
+          </Text>
+          <View style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:20}}>
+          <Button
+            title="Nope"
+            buttonStyle={{
+              backgroundColor: colors.buttonbg,
+              borderRadius: 3,
+            }}
+            containerStyle={{
+              width: 120,
+              // marginHorizontal: 70,
+              // marginVertical: 10,
+            }}
+            onPress={() => setisfraud(!isfraud)}
+          />
+          <Button
+            title="Add to Block"
+            buttonStyle={{
+              backgroundColor: colors.buttonbg,
+              borderRadius: 3,
+            }}
+            containerStyle={{
+              width: 120,
+              // marginHorizontal: 70,
+              // marginVertical: 10,
+            }}
+            // onPress={handletestinput}
+          />
+          </View>
+        </View>
       </Overlay>
       <View style={styles.inputcomponent}>
         <Input
@@ -56,7 +89,7 @@ export default function Numfraud() {
           marginBottom: 20,
           fontWeight: '600',
           textAlign: 'left',
-          color:"#fff"
+          color: '#fff',
         }}>
         Call Logs
       </Text>
@@ -132,7 +165,7 @@ const styles = StyleSheet.create({
   },
   textstyles: {
     fontSize: 20,
-    color:colors.white
+    color: colors.white,
   },
   inputcomponent: {
     width: '100%',
@@ -143,5 +176,8 @@ const styles = StyleSheet.create({
   },
   inputtest: {
     width: '80%',
+  },
+  Overlaycontainer: {
+    margin: 10,
   },
 });
