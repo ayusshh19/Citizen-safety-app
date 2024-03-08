@@ -10,6 +10,8 @@ export default function Numfraud() {
   const [loadcall, setloadcall] = useState([]);
   const [numberinput, setnumberinput] = useState('');
   const [isfraud, setisfraud] = useState(false);
+  const [userdetails, setuserdetails] = useState('');
+  const [isuserdetailshow, setisuserdetailshow] = useState(false);
   const handletestinput = () => {
     if (numberlist.includes(parseInt(numberinput))) {
       Alert.alert('Its a Fraud number but we have already blocked it for you');
@@ -18,7 +20,10 @@ export default function Numfraud() {
     }
   };
   useEffect(() => {
-    CallLogs.load(20).then(c => setloadcall(c));
+    CallLogs.load(20).then(c => {
+      console.log(c)
+      setloadcall(c)
+    });
   }, []);
   return (
     <View style={styles.component}>
@@ -28,33 +33,72 @@ export default function Numfraud() {
             Its not an fraud number but if you find it you can add to us we can
             verify for you and if we get multiple reports we could block for you
           </Text>
-          <View style={{display:"flex",flexDirection:"row",justifyContent:"space-evenly",marginTop:20}}>
-          <Button
-            title="Nope"
-            buttonStyle={{
-              backgroundColor: colors.buttonbg,
-              borderRadius: 3,
-            }}
-            containerStyle={{
-              width: 120,
-              // marginHorizontal: 70,
-              // marginVertical: 10,
-            }}
-            onPress={() => setisfraud(!isfraud)}
-          />
-          <Button
-            title="Add to Block"
-            buttonStyle={{
-              backgroundColor: colors.buttonbg,
-              borderRadius: 3,
-            }}
-            containerStyle={{
-              width: 120,
-              // marginHorizontal: 70,
-              // marginVertical: 10,
-            }}
-            // onPress={handletestinput}
-          />
+          <View
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'space-evenly',
+              marginTop: 20,
+            }}>
+            <Button
+              title="Nope"
+              buttonStyle={{
+                backgroundColor: colors.buttonbg,
+                borderRadius: 3,
+              }}
+              containerStyle={{
+                width: 120,
+                // marginHorizontal: 70,
+                // marginVertical: 10,
+              }}
+              onPress={() => setisfraud(!isfraud)}
+            />
+            <Button
+              title="Add to Block"
+              buttonStyle={{
+                backgroundColor: colors.buttonbg,
+                borderRadius: 3,
+              }}
+              containerStyle={{
+                width: 120,
+                // marginHorizontal: 70,
+                // marginVertical: 10,
+              }}
+              // onPress={handletestinput}
+            />
+          </View>
+        </View>
+      </Overlay>
+      <Overlay
+        isVisible={isuserdetailshow}
+        onBackdropPress={() => setisuserdetailshow(!isuserdetailshow)}>
+        <View style={styles.Overlaycontainer}>
+          <Text>
+            DateTime - {userdetails.dateTime}
+          </Text>
+          <Text>
+            Duration - {userdetails.duration}
+          </Text>
+          <Text>
+            Name - {userdetails.name===null?"UNKNOWN":userdetails.name}
+          </Text>
+          <Text>
+            Phone Number - {userdetails.phoneNumber}
+          </Text>
+          <View>
+            <Button
+              title="Nope"
+              buttonStyle={{
+                backgroundColor: colors.buttonbg,
+                borderRadius: 3,
+              }}
+              containerStyle={{
+                width: 200,
+                marginHorizontal: 70,
+                marginVertical: 10,
+              }}
+              onPress={() => setisuserdetailshow(!isuserdetailshow)}
+            />
           </View>
         </View>
       </Overlay>
@@ -104,14 +148,18 @@ export default function Numfraud() {
                     margin: 3,
                   }}
                   containerStyle={{
-                    backgroundColor: colors.grayscreenbg,
+                    backgroundColor: data.type==="INCOMING"?colors.grayscreenbg:colors.missedcall,
                     borderRadius: 10,
                     color: colors.white,
                   }}
                   leftContent={reset => (
                     <Button
                       title="Info"
-                      onPress={() => reset()}
+                      onPress={() => {
+                        setuserdetails(data)
+                        setisuserdetailshow(!isuserdetailshow);
+                        reset()
+                      }}
                       icon={{name: 'info', color: 'white'}}
                       buttonStyle={{
                         minHeight: '90%',

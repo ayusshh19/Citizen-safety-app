@@ -6,4 +6,5 @@ export default {
     screenbg:"#111827",
     grayscreenbg:"#1F2937",
     buttonbg:"#24A19C",
+    missedcall:"#FF6868"
   };
