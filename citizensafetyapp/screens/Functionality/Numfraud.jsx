@@ -21,7 +21,6 @@ export default function Numfraud() {
   };
   useEffect(() => {
     CallLogs.load(20).then(c => {
-      console.log(c)
       setloadcall(c)
     });
   }, []);
