@@ -15,8 +15,8 @@ export default function Urlfraud() {
         fraudsmsscore = response[0][1].score;
         validsmsscore = response[0][0].score;
       } else {
-        fraudsmsscore = response[0][1].score;
-        validsmsscore = response[0][0].score;
+        fraudsmsscore = response[0][0].score;
+        validsmsscore = response[0][1].score;
       }
       if (fraudsmsscore > validsmsscore && fraudsmsscore > 0.9) {
         Alert.alert('Fraud Url found');
