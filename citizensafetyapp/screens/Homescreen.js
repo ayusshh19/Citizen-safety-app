@@ -17,6 +17,7 @@ import Blog from './Blog';
 import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
 import { Smsclassifier, query } from './api/functions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 // import CallDetectorManager from "react-native-call-detection";
 // import RNCallKeep from 'react-native-callkeep';
 // import Fraudnumbers from './Functionality/Fraudnumbers';
@@ -63,7 +64,7 @@ const TabButton = (props) => {
   )
 }
 export default function HomeScreen() {
-
+  const [spamsmslist, setspamsmslist] = useState([])
   const requestSmsPermission = async () => {
     try {
       const permission = await PermissionsAndroid
@@ -80,11 +81,28 @@ export default function HomeScreen() {
       console.log(err);
     }
   };
+  async function retrieveItem(key) {
+    try {
+      let retrievedItem = await AsyncStorage.getItem(key);
+      console.log("humara retrieved item ", retrievedItem)
+      return retrievedItem;
+    } catch (error) {
+      console.log(error.message);
+    }
+    return
+  }
+
   function extractUrls(inputString) {
     const urlPattern = /\b(?:https?|ftp):\/\/\S+\b/g;
     return inputString.match(urlPattern) || [];
   }
-  useEffect(() => {
+  useEffect(() => { 
+    if (retrieveItem('fraudsmslist').length > 0) {
+      setspamsmslist(JSON.parse(retrieveItem('fraudsmslist')))
+      console.log(spamsmslist)
+    }
+    Smsclassifier({ "inputs": "message.body" })
+    query({ "inputs": "urls[0]" })
     requestSmsPermission();
     // const callDetector = new CallDetectorManager(
     //   (event, number) => {
@@ -109,34 +127,80 @@ export default function HomeScreen() {
     SmsListener.addListener(message => {
       const urls = extractUrls(message.body)
       let fraudurlscore, validurlscore, fraudsmsscore, validsmsscore;
-      Smsclassifier({ "inputs": message.body })
+
       if (urls.length > 0) {
-        query({ "inputs": urls[0] }).then((response) => {
-          console.log(response)
-          validurlscore = response[0][0].score
-          fraudurlscore = response[0][1].score
-          Smsclassifier({ "inputs": message.body }).then((response) => {
-            console.log(response)
-            fraudsmsscore = response[0][0].score
-            validsmsscore = response[0][1].score
-            if ((validurlscore < fraudurlscore && fraudurlscore > 0.4) || fraudsmsscore > validsmsscore) {
-              Alert.alert("Its a fruad sms stay alert from URLS!")
-            }
+        try {
+          query({ "inputs": urls[0] }).then((response) => {
+            validurlscore = response[0][0].score
+            fraudurlscore = response[0][1].score
+            Smsclassifier({ "inputs": message.body }).then((response) => {
+              if (response[0][0].label === "LABEL_1") {
+                fraudsmsscore = response[0][0].score
+                validsmsscore = response[0][1].score
+              }
+              else {
+                fraudsmsscore = response[0][1].score
+                validsmsscore = response[0][0].score
+              }
+
+              if ((validurlscore < fraudurlscore && fraudurlscore > 0.4) || fraudsmsscore > validsmsscore) {
+                const updatedList = [...spamsmslist, message.body];
+                setspamsmslist(updatedList);
+              
+                AsyncStorage.setItem("fraudsmslist", JSON.stringify(updatedList))
+                  .then(() => {
+                    console.log("AsyncStorage updated successfully");
+                  })
+                  .catch((error) => {
+                    console.error("Error updating AsyncStorage:", error);
+                  });
+              
+                Alert.alert("It's a fraud SMS. Stay alert from URLs!");
+                console.log("Updated list: ", updatedList);
+              }
+            });
           });
-        });
+        } catch (error) {
+          console.log("Something went wrong")
+        }
 
       }
       else {
-        Smsclassifier({ "inputs": message.body }).then((response) => {
-          fraudsmsscore = response[0][1].score
-          validsmsscore = response[0][0].score
-        });
-        if (fraudsmsscore > validsmsscore) {
-          Alert.alert("Its a fraud sms !")
+        try {
+          Smsclassifier({ "inputs": message.body }).then((response) => {
+            console.log(response)
+            if (response[0][0].label === "LABEL_1") {
+              fraudsmsscore = response[0][0].score
+              validsmsscore = response[0][1].score
+            }
+            else {
+              fraudsmsscore = response[0][1].score
+              validsmsscore = response[0][0].score
+            }
+            console.log(fraudsmsscore, validsmsscore)
+            if (fraudsmsscore > validsmsscore) {
+              const updatedList = [...spamsmslist, message.body];
+                setspamsmslist(updatedList);
+              
+                AsyncStorage.setItem("fraudsmslist", JSON.stringify(updatedList))
+                  .then(() => {
+                    console.log("AsyncStorage updated successfully");
+                  })
+                  .catch((error) => {
+                    console.error("Error updating AsyncStorage:", error);
+                  });
+              
+                Alert.alert("It's a fraud SMS. Stay alert from URLs!");
+                console.log("Updated list: ", updatedList);
+            }
+          });
+        } catch (error) {
+          console.log("Something went wrong")
         }
+
       }
     })
-  }, []);
+  }, [spamsmslist]);
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
