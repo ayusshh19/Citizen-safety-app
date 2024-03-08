@@ -46,6 +46,7 @@ const styles = StyleSheet.create({
   textstyle: {
     marginTop: 10,
     textAlign: 'center',
+    color:colors.white
   },
 });
 export default Mainpagebutton;

@@ -56,6 +56,7 @@ export default function Numfraud() {
           marginBottom: 20,
           fontWeight: '600',
           textAlign: 'left',
+          color:"#fff"
         }}>
         Call Logs
       </Text>
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
   },
   textstyles: {
     fontSize: 20,
+    color:colors.white
   },
   inputcomponent: {
     width: '100%',

@@ -18,6 +18,7 @@ import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
 import { Smsclassifier, query } from './api/functions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import colors from '../redux/constants/colors';
 // import CallDetectorManager from "react-native-call-detection";
 // import RNCallKeep from 'react-native-callkeep';
 // import Fraudnumbers from './Functionality/Fraudnumbers';
@@ -238,6 +239,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
+    color:"#fff"
   },
   text: {
     fontSize: 12,
