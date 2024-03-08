@@ -147,7 +147,7 @@ export default function Numfraud() {
                     margin: 3,
                   }}
                   containerStyle={{
-                    backgroundColor: data.type==="INCOMING"?colors.grayscreenbg:colors.missedcall,
+                    backgroundColor: colors.grayscreenbg,
                     borderRadius: 10,
                     color: colors.white,
                   }}
