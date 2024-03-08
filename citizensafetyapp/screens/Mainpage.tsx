@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection:"row",
     flexWrap:"wrap",
     justifyContent:"space-evenly",
-    color:"white"
+    color:"white",
   }
 });
 export default Mainpage;
