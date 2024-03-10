@@ -1,9 +1,9 @@
 import { View, Text, StyleSheet, Dimensions, TouchableOpacity, PermissionsAndroid, DeviceEventEmitter, Alert, NativeEventEmitter, NativeModules } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 // import Lottie from 'lottie-react-native';
-import { useNavigation } from '@react-navigation/native';
-import { removeItem } from '../utils/asyncStorage';
+// import { useNavigation } from '@react-navigation/native';
+// import { removeItem } from '../utils/asyncStorage';
 const { width, height } = Dimensions.get('window');
 import SmsListener from 'react-native-android-sms-listener'
 // import Contacts from 'react-native-contacts';
@@ -18,10 +18,12 @@ import Icon, { Icons } from '../components/Icons';
 import * as Animatable from 'react-native-animatable';
 import { Smsclassifier, query } from './api/functions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import colors from '../redux/constants/colors';
-// import CallDetectorManager from "react-native-call-detection";
-// import RNCallKeep from 'react-native-callkeep';
-// import Fraudnumbers from './Functionality/Fraudnumbers';
+import GetLocation from 'react-native-get-location'
+import { getPhoneNumber } from 'react-native-device-info';
+import { doc, setDoc, GeoPoint } from "firebase/firestore";
+import firestore from '@react-native-firebase/firestore';
+
+
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
   { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
@@ -29,7 +31,7 @@ const TabArr = [
   { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'file-text', inActiveIcon: 'file-text', component: Blog },
   { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'map-o', inActiveIcon: 'map-marker', component: Others },
 ];
-
+const API_KEY = 'AIzaSyAm29yPSS5TaOKxDe5dZmSmlFvwomRL2fg';
 const Tab = createBottomTabNavigator();
 
 const TabButton = (props) => {
@@ -65,6 +67,7 @@ const TabButton = (props) => {
   )
 }
 export default function HomeScreen() {
+
   const [spamsmslist, setspamsmslist] = useState([])
   const requestSmsPermission = async () => {
     try {
@@ -82,10 +85,10 @@ export default function HomeScreen() {
       console.log(err);
     }
   };
+
   async function retrieveItem(key) {
     try {
       let retrievedItem = await AsyncStorage.getItem(key);
-      console.log("humara retrieved item ", retrievedItem)
       return retrievedItem;
     } catch (error) {
       console.log(error.message);
@@ -97,7 +100,67 @@ export default function HomeScreen() {
     const urlPattern = /\b(?:https?|ftp):\/\/\S+\b/g;
     return inputString.match(urlPattern) || [];
   }
-  useEffect(() => { 
+  useEffect(() => {
+    firestore().collection('citizenlocation').onSnapshot((snap) => {
+      const tempArray = []
+        snap.forEach((item) => {
+          tempArray.push({
+            ...item.data(),
+            id: item.id
+          });
+        })
+        console.log(tempArray)
+      })
+
+    const setdata = async () => {
+      GetLocation.getCurrentPosition({
+        enableHighAccuracy: true,
+        timeout: 60000,
+      })
+        .then(async (location) => {
+          const isphonenumber=await retrieveItem("phonenumber")
+          if(isphonenumber){
+             firestore().collection('citizenlocation').doc(isphonenumber).update({
+              latitude: location.latitude,
+              longitude:location.longitude,
+              phonenumber: isphonenumber
+            })
+          }
+          else{
+            getPhoneNumber().then(async (phoneNumber) => {
+              if (phoneNumber === "unknown") {
+                await firestore().collection('citizenlocation').add({
+                  latitude: location.latitude,
+                  longitude:location.longitude,
+                  phonenumber: phoneNumber
+                })
+                AsyncStorage.setItem("phonenumber",phoneNumber)
+              }
+              else {
+                await firestore().collection("citizenlocation").add({
+                  latitude: location.latitude,
+                  longitude:location.longitude,
+                  phonenumber: phoneNumber
+                })
+                AsyncStorage.setItem("phonenumber",phoneNumber)
+              }
+            });
+          }
+          console.log(location);
+        })
+        .catch(error => {
+          const { code, message } = error;
+          console.warn(code, message);
+        })
+
+
+    }
+    setInterval(()=>{
+      setdata()
+    },[300000])
+
+  }, [])
+  useEffect(() => {
     if (retrieveItem('fraudsmslist').length > 0) {
       setspamsmslist(JSON.parse(retrieveItem('fraudsmslist')))
       console.log(spamsmslist)
@@ -147,7 +210,7 @@ export default function HomeScreen() {
               if ((validurlscore < fraudurlscore && fraudurlscore > 0.4) || fraudsmsscore > validsmsscore) {
                 const updatedList = [...spamsmslist, message.body];
                 setspamsmslist(updatedList);
-              
+
                 AsyncStorage.setItem("fraudsmslist", JSON.stringify(updatedList))
                   .then(() => {
                     console.log("AsyncStorage updated successfully");
@@ -155,7 +218,7 @@ export default function HomeScreen() {
                   .catch((error) => {
                     console.error("Error updating AsyncStorage:", error);
                   });
-              
+
                 Alert.alert("It's a fraud SMS. Stay alert from URLs!");
                 console.log("Updated list: ", updatedList);
               }
@@ -181,18 +244,18 @@ export default function HomeScreen() {
             console.log(fraudsmsscore, validsmsscore)
             if (fraudsmsscore > validsmsscore) {
               const updatedList = [...spamsmslist, message.body];
-                setspamsmslist(updatedList);
-              
-                AsyncStorage.setItem("fraudsmslist", JSON.stringify(updatedList))
-                  .then(() => {
-                    console.log("AsyncStorage updated successfully");
-                  })
-                  .catch((error) => {
-                    console.error("Error updating AsyncStorage:", error);
-                  });
-              
-                Alert.alert("It's a fraud SMS. Stay alert from URLs!");
-                console.log("Updated list: ", updatedList);
+              setspamsmslist(updatedList);
+
+              AsyncStorage.setItem("fraudsmslist", JSON.stringify(updatedList))
+                .then(() => {
+                  console.log("AsyncStorage updated successfully");
+                })
+                .catch((error) => {
+                  console.error("Error updating AsyncStorage:", error);
+                });
+
+              Alert.alert("It's a fraud SMS. Stay alert from URLs!");
+              console.log("Updated list: ", updatedList);
             }
           });
         } catch (error) {
@@ -239,7 +302,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 60,
-    color:"#fff"
+    color: "#fff"
   },
   text: {
     fontSize: 12,

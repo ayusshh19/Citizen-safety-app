@@ -15,6 +15,7 @@ buildscript {
         classpath("com.android.tools.build:gradle")
         classpath("com.facebook.react:react-native-gradle-plugin")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin")
+        classpath("com.google.gms:google-services:4.4.0")
     }   
     
 }
@@ -23,6 +24,9 @@ buildscript {
 apply plugin: "com.facebook.react.rootproject"
 subprojects { subproject ->
         if(project['name'] == 'react-native-read-sms'){
+            project.configurations { compile { } }
+        }
+         if(project['name'] == 'react-native-google-nearby-messages'){
             project.configurations { compile { } }
         }
 }

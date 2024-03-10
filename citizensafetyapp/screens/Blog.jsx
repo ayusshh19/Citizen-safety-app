@@ -12,7 +12,7 @@ import axios from 'axios';
 import {Button, Overlay} from '@rneui/themed';
 const Blog = () => {
   const [blognews, setblognews] = useState([]);
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [blogoverlaydata, setblogoverlaydata] = useState('');
   useEffect(() => {
     axios
