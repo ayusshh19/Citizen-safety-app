@@ -36,8 +36,6 @@ const styles = StyleSheet.create({
     shadowRadius: 1.41,
 
     elevation: 2,
-
-    elevation: 5,
   },
   upperimagestyle: {
     width: 60,

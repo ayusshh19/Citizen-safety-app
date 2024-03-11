@@ -28,6 +28,9 @@
       <meta-data
             android:name="com.google.android.nearby.messages.AIzaSyAm29yPSS5TaOKxDe5dZmSmlFvwomRL2fg"
             android:value="AIzaSyAm29yPSS5TaOKxDe5dZmSmlFvwomRL2fg" />
+      <meta-data
+     android:name="com.google.android.geo.API_KEY"
+     android:value="AIzaSyDFZcE7jz4fCi3kjW6OsbTgZgQqDbmefwg"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

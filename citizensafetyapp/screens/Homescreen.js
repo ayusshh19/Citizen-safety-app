@@ -20,7 +20,6 @@ import { Smsclassifier, query } from './api/functions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetLocation from 'react-native-get-location'
 import { getPhoneNumber } from 'react-native-device-info';
-import { doc, setDoc, GeoPoint } from "firebase/firestore";
 import firestore from '@react-native-firebase/firestore';
 
 
@@ -101,52 +100,54 @@ export default function HomeScreen() {
     return inputString.match(urlPattern) || [];
   }
   useEffect(() => {
-    firestore().collection('citizenlocation').onSnapshot((snap) => {
-      const tempArray = []
-        snap.forEach((item) => {
-          tempArray.push({
-            ...item.data(),
-            id: item.id
-          });
-        })
-        console.log(tempArray)
-      })
-
+    // AsyncStorage.setItem("phonenumber","")
     const setdata = async () => {
       GetLocation.getCurrentPosition({
         enableHighAccuracy: true,
         timeout: 60000,
       })
         .then(async (location) => {
-          const isphonenumber=await retrieveItem("phonenumber")
-          if(isphonenumber){
-             firestore().collection('citizenlocation').doc(isphonenumber).update({
+          const isphonenumber = await retrieveItem("phonenumber")
+          if (isphonenumber) {
+            firestore().collection('citizenlocation').doc(isphonenumber).update({
               latitude: location.latitude,
-              longitude:location.longitude,
-              phonenumber: isphonenumber
+              longitude: location.longitude,
             })
           }
-          else{
+          else {
             getPhoneNumber().then(async (phoneNumber) => {
               if (phoneNumber === "unknown") {
                 await firestore().collection('citizenlocation').add({
                   latitude: location.latitude,
-                  longitude:location.longitude,
+                  longitude: location.longitude,
                   phonenumber: phoneNumber
+                }).then(function (docRef) {
+                  AsyncStorage.setItem("phonenumber", docRef.id)
+                  console.log("Document written with ID: ", docRef.id);
                 })
-                AsyncStorage.setItem("phonenumber",phoneNumber)
+                  .catch(function (error) {
+                    console.error("Error adding document: ", error);
+                  });
+                // AsyncStorage.setItem("phonenumber", phoneNumber)
               }
               else {
                 await firestore().collection("citizenlocation").add({
                   latitude: location.latitude,
-                  longitude:location.longitude,
+                  longitude: location.longitude,
                   phonenumber: phoneNumber
+                }).then(function (docRef) {
+                  AsyncStorage.setItem("phonenumber", docRef.id)
+                  console.log("Document written with ID: ", docRef.id);
                 })
-                AsyncStorage.setItem("phonenumber",phoneNumber)
+                  .catch(function (error) {
+                    console.error("Error adding document: ", error);
+                  });
+                  // AsyncStorage.setItem("phonenumber",phoneNumber)
               }
             });
           }
-          console.log(location);
+          AsyncStorage.setItem("currentlocation", JSON.stringify({ latitude: location.latitude, longitude: location.longitude }))
+          // console.log(location);
         })
         .catch(error => {
           const { code, message } = error;
@@ -155,9 +156,9 @@ export default function HomeScreen() {
 
 
     }
-    setInterval(()=>{
-      setdata()
-    },[300000])
+    // setInterval(()=>{
+    setdata()
+    // },[300000])
 
   }, [])
   useEffect(() => {
