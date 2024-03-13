@@ -7,6 +7,8 @@ import GetLocation from 'react-native-get-location';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomSheet, {BottomSheetRefProps} from './Bottomsheet';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
+import SmsAndroid from 'react-native-get-sms-android';
+
 import {Avatar} from '@rneui/themed';
 const Others = () => {
   const [mycurrent, setmycurrent] = useState({});
@@ -63,6 +65,18 @@ const Others = () => {
         setlocation(tempArray);
       });
   }, []);
+  function sendSmsData(mobileNumber, bodySMS) {
+    SmsAndroid.autoSend(
+        mobileNumber,
+        bodySMS,
+        (fail) => {
+            console.log('Failed with this error: ' + fail);
+        },
+        (success) => {
+            console.log('SMS sent successfully');
+        },
+    );
+  }
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <View style={styles.container}>
@@ -174,7 +188,7 @@ const Others = () => {
                         borderTopWidth:1,
                         paddingTop:10
                       }}>
-                      <TouchableOpacity style={{flex:1,justifyContent:"center",alignItems:"center",borderRightWidth:1}}>
+                      <TouchableOpacity style={{flex:1,justifyContent:"center",alignItems:"center",borderRightWidth:1}} onPress={()=>sendSmsData(dataloc.phonenumber,"Hey this is an urgent sms please help me You can find me near you in Suraksha app")}>
                         <Text style={{color: colors.screenbg}}>Message</Text>
                       </TouchableOpacity>
                       <TouchableOpacity style={{flex:1,justifyContent:"center",alignItems:"center"}} onPress={()=>Linking.openURL(`tel:${dataloc.phonenumber}`)}>
