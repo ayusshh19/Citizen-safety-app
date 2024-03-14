@@ -1,5 +1,5 @@
 import {View, Text, StyleSheet, Image} from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import colors from '../redux/constants/colors';
 import mainlog from '../assets/mainlog.jpg'
 import Mainpagebutton from '../components/Mainpagebutton';

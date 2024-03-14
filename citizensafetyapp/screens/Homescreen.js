@@ -21,12 +21,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import GetLocation from 'react-native-get-location'
 import { getPhoneNumber } from 'react-native-device-info';
 import firestore from '@react-native-firebase/firestore';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Innerdetail from './Innerdetail';
 
+const InfoStack = createNativeStackNavigator();
+function Infostackscreen() {
+  return (
+    <InfoStack.Navigator initialRouteName='Infodata'>
+      <InfoStack.Screen options={{ headerShown: false }} name="Infodata" component={Infopage} />
+      <InfoStack.Screen options={{ headerShown: false }} name="innerInfo" component={Innerdetail} />
+      {/* <InfoStack.Screen name="Details" component={DetailsScreen} /> */}
+    </InfoStack.Navigator>
+  );
+}
 
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
-  { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
-  { route: 'Info', label: 'Info', type: Icons.FontAwesome, activeIcon: 'info-circle', inActiveIcon: 'info-circle', component: Infopage },
+  // { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
+  { route: 'Info', label: 'Info', type: Icons.FontAwesome, activeIcon: 'info-circle', inActiveIcon: 'info-circle', component: Infostackscreen },
   { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'file-text', inActiveIcon: 'file-text', component: Blog },
   { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'map-o', inActiveIcon: 'map-marker', component: Others },
 ];

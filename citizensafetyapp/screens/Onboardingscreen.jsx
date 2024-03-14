@@ -5,25 +5,23 @@ import {
   Dimensions,
   TouchableOpacity,
   PermissionsAndroid,
-} from "react-native";
-import React from "react";
-import Onboarding from "react-native-onboarding-swiper";
-import Lottie from "lottie-react-native";
-import { useNavigation } from "@react-navigation/native";
-import { setItem } from "../utils/asyncStorage";
-const { width, height } = Dimensions.get("window");
-
+} from 'react-native';
+import React from 'react';
+import Onboarding from 'react-native-onboarding-swiper';
+import Lottie from 'lottie-react-native';
+import {useNavigation} from '@react-navigation/native';
+import {setItem} from '../utils/asyncStorage';
+const {width, height} = Dimensions.get('window');
 
 export default function OnboardingScreen() {
   const navigation = useNavigation();
 
-  const handleDone =async () => {
-
-    navigation.navigate("Homeload");
-    setItem("onboarded", "1");
+  const handleDone = async () => {
+    navigation.navigate('Homeload');
+    setItem('onboarded', '1');
   };
 
-  const doneButton = ({ ...props }) => {
+  const doneButton = ({...props}) => {
     return (
       <TouchableOpacity style={styles.doneButton} {...props}>
         <Text>Done</Text>
@@ -36,64 +34,63 @@ export default function OnboardingScreen() {
         onDone={handleDone}
         onSkip={handleDone}
         bottomBarHighlight={true}
-        
         DoneButtonComponent={doneButton}
-        containerStyles={{ paddingHorizontal: 15 }}
+        containerStyles={{paddingHorizontal: 15}}
         pages={[
           {
-            backgroundColor: "#111827",
+            backgroundColor: '#111827',
             image: (
               <View style={styles.lottie}>
                 <Lottie
-                  source={require("../assets/homeanimation.json")}
+                  source={require('../assets/homeanimation.json')}
                   style={{
-                    width: 300,
-                    height: 300,
+                    width: width * 0.7,
+                    height: width,
                   }}
                   autoPlay
                   loop
                 />
               </View>
             ),
-            title: "Boost Productivity",
-            subtitle: "Subscribe this channel to boost your productivity level",
+            title: 'Boost Productivity',
+            subtitle: 'Subscribe this channel to boost your productivity level',
           },
           {
-            backgroundColor: "#111827",
+            backgroundColor: '#111827',
             image: (
               <View style={styles.lottie}>
                 <Lottie
-                  source={require("../assets/loading3.json")}
+                  source={require('../assets/loading3.json')}
                   style={{
-                    width: 300,
-                    height: 300,
+                    width: width * 0.7,
+                    height: width,
                   }}
                   autoPlay
                   loop
                 />
               </View>
             ),
-            title: "Work Seamlessly",
-            subtitle: "Get your work done seamlessly without interruption",
+            title: 'Work Seamlessly',
+            subtitle: 'Get your work done seamlessly without interruption',
           },
           {
-            backgroundColor: "#111827",
+            backgroundColor: '#111827',
             image: (
               <View style={styles.lottie}>
                 <Lottie
-                  source={require("../assets/loading2.json")}
+                  source={require('../assets/loading2.json')}
                   style={{
-                    width: 300,
-                    height: 300,
+                    width: width * 0.7,
+                    height: width,
                   }}
                   autoPlay
                   loop
                 />
               </View>
             ),
-            title: "Achieve Higher Goals",
+            title: 'Achieve Higher Goals',
             subtitle:
-              "By boosting your productivity we help you to achieve higher goals",
+              'By boosting your productivity we help you to achieve higher goals',
           },
         ]}
       />
@@ -108,10 +105,10 @@ const styles = StyleSheet.create({
   lottie: {
     width: width * 0.7,
     height: width,
-    margin:"auto",
+    margin: 'auto',
   },
   doneButton: {
     padding: 20,
-    color:"white"
+    color: 'white',
   },
 });
