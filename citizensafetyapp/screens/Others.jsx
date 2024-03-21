@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Linking, ScrollView} from 'react-native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import colors from '../redux/constants/colors';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
@@ -52,6 +52,7 @@ const Others = () => {
   }, [ref]);
   useEffect(() => {
     getcurrentlocation('currentlocation');
+    
     firestore()
       .collection('citizenlocation')
       .onSnapshot(snap => {
@@ -66,16 +67,14 @@ const Others = () => {
       });
   }, []);
   function sendSmsData(mobileNumber, bodySMS) {
-    SmsAndroid.autoSend(
-        mobileNumber,
-        bodySMS,
-        (fail) => {
-            console.log('Failed with this error: ' + fail);
-        },
-        (success) => {
-            console.log('SMS sent successfully');
-        },
-    );
+    const url = `sms:9892250482?body=Hey this is an urgent sms please help me You can find me near you in Suraksha app`
+    Linking.canOpenURL(url).then(supported => {
+      if (!supported) {
+        return Linking.openURL(url)
+      } else {
+        console.log('Unsupported url: ' + url)
+      }
+    }).catch(err => console.error('An error occurred', err))
   }
   return (
     <GestureHandlerRootView style={{flex: 1}}>
@@ -116,7 +115,7 @@ const Others = () => {
           </Text>
         </TouchableOpacity>
         <BottomSheet ref={ref}>
-          <View style={{flex: 1}}>
+          <ScrollView style={{flex: 1}}>
             {datalocation &&
               datalocation.map((dataloc, index) => {
                 console.log(dataloc);
@@ -198,7 +197,7 @@ const Others = () => {
                   </View>
                 );
               })}
-          </View>
+          </ScrollView>
         </BottomSheet>
       </View>
     </GestureHandlerRootView>
