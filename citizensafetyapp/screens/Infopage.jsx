@@ -22,9 +22,6 @@ const Infopage = () => {
             </TouchableOpacity>
           );
         })}
-        <h1>
-          Hackathon Logithon hackathon this is a hackthon is a ha ajskaj sjskjhs ajsjahjhjahj jhshjhjhshhjhsjahsh jhs shja jhsajh
-        </h1>
         <View style={{marginBottom:70}}>
 
         </View>
