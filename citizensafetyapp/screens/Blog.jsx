@@ -63,7 +63,7 @@ const Blog = () => {
   useEffect(() => {
     axios
       .get(
-        'https://newsapi.org/v2/everything?q=tesla&from=2024-02-13&sortBy=publishedAt&apiKey=e1d7c86abdf740cc83720c83e59eab6d',
+        'https://newsapi.org/v2/everything?q=cyber&from=2024-02-20&sortBy=publishedAt&apiKey=e1d7c86abdf740cc83720c83e59eab6d',
       )
       .then(response => {
         setblognews(response.data.articles);

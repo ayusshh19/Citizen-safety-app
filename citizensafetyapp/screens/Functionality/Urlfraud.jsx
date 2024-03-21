@@ -9,24 +9,28 @@ export default function Urlfraud() {
   const handleurlinput = async () => {
     console.log('validurlscore');
     let fraudsmsscore, validsmsscore;
-    query({inputs: urlinput}).then(response => {
-      console.log(response);
-      if (response[0][0].label === 'BENIGN') {
-        fraudsmsscore = response[0][1].score;
-        validsmsscore = response[0][0].score;
-      } else {
-        fraudsmsscore = response[0][0].score;
-        validsmsscore = response[0][1].score;
-      }
-      if (fraudsmsscore > validsmsscore && fraudsmsscore > 0.9) {
-        Alert.alert('Fraud Url found');
-      } else if (fraudsmsscore > validsmsscore) {
-        Alert.alert('Found to be suspicious');
-      } else {
-        Alert.alert('Safe to proceed');
-      }
-      seturlinput("")
-    });
+    try {
+      query({inputs: urlinput}).then(response => {
+        console.log(response);
+        if (response[0][0].label === 'BENIGN') {
+          fraudsmsscore = response[0][1].score;
+          validsmsscore = response[0][0].score;
+        } else {
+          fraudsmsscore = response[0][0].score;
+          validsmsscore = response[0][1].score;
+        }
+        if (fraudsmsscore > validsmsscore && fraudsmsscore > 0.95) {
+          Alert.alert('Fraud Url found');
+        } else if (fraudsmsscore > validsmsscore) {
+          Alert.alert('Found to be suspicious');
+        } else {
+          Alert.alert('Safe to proceed');
+        }
+        seturlinput("")
+      });
+    } catch (error) {
+      Alert.alert("Please wait for Few seconds to load model first time")
+    }
   };
   return (
     <View style={styles.component}>

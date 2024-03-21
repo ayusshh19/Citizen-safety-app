@@ -3,7 +3,7 @@ import React from 'react';
 import colors from '../redux/constants/colors';
 import { useNavigation } from '@react-navigation/native';
 import { list } from './data';
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 const Infopage = () => {
   const navigate = useNavigation()
@@ -17,10 +17,17 @@ const Infopage = () => {
         {list.map((data,index) => {
           return (
             <TouchableOpacity key={index} style={styles.cardcomponents} onPress={()=>navigate.navigate('innerInfo', {data:data})}>
-              <Text style={{color: '#fff',fontSize:20,textAlign:"center"}}>{data.title}</Text>
+              <Text style={{color: '#fff',fontSize:20,textAlign:"center",flex:5}}>{data.title}</Text>
+              <MaterialCommunityIcons style={{flex:1}} name="page-next-outline" color="white" size={30} />
             </TouchableOpacity>
           );
         })}
+        <h1>
+          Hackathon Logithon hackathon this is a hackthon is a ha ajskaj sjskjhs ajsjahjhjahj jhshjhjhshhjhsjahsh jhs shja jhsajh
+        </h1>
+        <View style={{marginBottom:70}}>
+
+        </View>
       </ScrollView>
     </View>
   );
@@ -39,6 +46,7 @@ const styles = StyleSheet.create({
   },
   cardcomponents: {
     flex: 1,
+    flexDirection:"row",
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: colors.buttonbg,

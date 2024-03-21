@@ -72,16 +72,16 @@ export default function Numfraud() {
         isVisible={isuserdetailshow}
         onBackdropPress={() => setisuserdetailshow(!isuserdetailshow)}>
         <View style={styles.Overlaycontainer}>
-          <Text>
+          <Text style={{color:colors.screenbg}}>
             DateTime - {userdetails.dateTime}
           </Text>
-          <Text>
+          <Text style={{color:colors.screenbg}}>
             Duration - {userdetails.duration}
           </Text>
-          <Text>
+          <Text style={{color:colors.screenbg}}>
             Name - {userdetails.name===null?"UNKNOWN":userdetails.name}
           </Text>
-          <Text>
+          <Text style={{color:colors.screenbg}}>
             Phone Number - {userdetails.phoneNumber}
           </Text>
           <View>

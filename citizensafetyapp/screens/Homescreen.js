@@ -37,7 +37,7 @@ function Infostackscreen() {
 
 const TabArr = [
   { route: 'Home', label: 'Home', type: Icons.Ionicons, activeIcon: 'grid', inActiveIcon: 'grid-outline', component: Mainpage },
-  // { route: 'Sos', label: 'Sos', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
+  { route: 'Sos', label: 'Chatbot', type: Icons.MaterialCommunityIcons, activeIcon: 'heart-plus', inActiveIcon: 'heart-plus-outline', component: Sos },
   { route: 'Info', label: 'Info', type: Icons.FontAwesome, activeIcon: 'info-circle', inActiveIcon: 'info-circle', component: Infostackscreen },
   { route: 'Blog', label: 'Blog', type: Icons.FontAwesome, activeIcon: 'file-text', inActiveIcon: 'file-text', component: Blog },
   { route: 'Others', label: 'Others', type: Icons.FontAwesome, activeIcon: 'map-o', inActiveIcon: 'map-marker', component: Others },
@@ -211,6 +211,7 @@ export default function HomeScreen() {
             validurlscore = response[0][0].score
             fraudurlscore = response[0][1].score
             Smsclassifier({ "inputs": message.body }).then((response) => {
+              console.log(response)
               if (response[0][0].label === "LABEL_1") {
                 fraudsmsscore = response[0][0].score
                 validsmsscore = response[0][1].score
